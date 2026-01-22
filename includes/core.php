@@ -85,9 +85,9 @@ class AutomaticBackupSystem
     
     private function logout()
     {
-        session_destroy();
-        header('Location: ?action=login');
-        exit;
+        // Call the centralized logout function
+        require_once 'includes/auth.php';
+        logoutUser();
     }
     
     private function showDashboard()

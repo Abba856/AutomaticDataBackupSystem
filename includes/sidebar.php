@@ -56,5 +56,16 @@
                 </li>
             <?php endif; ?>
         </ul>
+
+        <!-- Logout in the sidebar -->
+        <hr class="my-3">
+        <ul class="nav flex-column mb-2">
+            <li class="nav-item">
+                <a class="nav-link text-danger" href="?action=logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </li>
+        </ul>
     </div>
 </nav>

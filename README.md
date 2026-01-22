@@ -82,6 +82,7 @@ The system can be configured through the Settings section in the web interface o
 ## Backup Scheduling
 
 The system supports the following schedule types:
+
 - Manual: Run on demand
 - Hourly: Run every hour
 - Daily: Run once daily at specified time

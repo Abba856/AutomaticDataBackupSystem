@@ -45,17 +45,26 @@ function checkBackupPermissions($sourcePath, $destPath) {
     if (!file_exists($sourcePath)) {
         return ['valid' => false, 'error' => "Source path does not exist: $sourcePath"];
     }
-    
+
     if (!is_readable($sourcePath)) {
         return ['valid' => false, 'error' => "Source path is not readable: $sourcePath"];
     }
-    
-    // Check if destination directory is writable
-    $destDir = dirname($destPath);
-    if (!is_writable($destDir)) {
-        return ['valid' => false, 'error' => "Destination directory is not writable: $destDir"];
+
+    // Check if destination path is a directory (ends with /) or a file path
+    if (substr($destPath, -1) === '/') {
+        // It's a directory path, check if it's writable
+        $destDir = rtrim($destPath, '/');
+        if (!is_writable($destDir)) {
+            return ['valid' => false, 'error' => "Destination directory is not writable: $destDir"];
+        }
+    } else {
+        // It's a file path, check if the parent directory is writable
+        $destDir = dirname($destPath);
+        if (!is_writable($destDir)) {
+            return ['valid' => false, 'error' => "Destination directory is not writable: $destDir"];
+        }
     }
-    
+
     return ['valid' => true, 'error' => null];
 }
 

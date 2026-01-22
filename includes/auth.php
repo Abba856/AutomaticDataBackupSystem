@@ -62,6 +62,35 @@ function requireLogin()
     }
 }
 
+function logoutUser()
+{
+    global $db; // Access database connection if needed
+
+    // Log the logout activity
+    if (isset($_SESSION['username'])) {
+        logActivity("User logged out: " . $_SESSION['username']);
+    }
+
+    // Destroy all session data
+    $_SESSION = array();
+
+    // Delete the session cookie if it exists
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+
+    // Finally, destroy the session
+    session_destroy();
+
+    // Redirect to login page
+    header('Location: ?action=login');
+    exit;
+}
+
 function checkSessionTimeout()
 {
     if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time'] > SESSION_TIMEOUT)) {
@@ -69,7 +98,7 @@ function checkSessionTimeout()
         header('Location: ?action=login');
         exit;
     }
-    
+
     if (isset($_SESSION['login_time'])) {
         $_SESSION['login_time'] = time(); // Refresh session
     }

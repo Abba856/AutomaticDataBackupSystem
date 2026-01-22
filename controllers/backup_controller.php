@@ -54,25 +54,33 @@ class BackupController
             // Validate inputs
             $sourcePath = $job['source_path'];
             $destPath = $job['destination_path'];
-            
-            // Security validation
-            $validation = checkBackupPermissions($sourcePath, $destPath);
+
+            // Determine the actual destination directory
+            // If destPath is a directory (ends with /), use it directly
+            // If destPath is a file path, use dirname to get the directory
+            if (substr($destPath, -1) === '/') {
+                $destDir = rtrim($destPath, '/');
+            } else {
+                $destDir = dirname($destPath);
+            }
+
+            // Security validation - pass the actual directory for permission checks
+            $validation = checkBackupPermissions($sourcePath, $destDir . '/');
             if (!$validation['valid']) {
                 throw new Exception($validation['error']);
             }
-            
+
             // Additional path validation
             if (!validateBackupPath($sourcePath)) {
                 throw new Exception("Invalid source path: $sourcePath");
             }
-            
+
             // Validate destination path - ensure it's in allowed paths
-            if (!validateBackupPath(dirname($destPath))) {
-                throw new Exception("Invalid destination path: $destPath");
+            if (!validateBackupPath($destDir)) {
+                throw new Exception("Invalid destination path: $destDir");
             }
-            
+
             // Ensure destination directory exists and is writable
-            $destDir = dirname($destPath);
             if (!is_dir($destDir)) {
                 throw new Exception("Destination directory does not exist: $destDir");
             }
@@ -98,7 +106,9 @@ class BackupController
             // Generate backup filename
             $timestamp = date('Y-m-d-H-i-s');
             $filename = basename($sourcePath) . "_backup_$timestamp.tar.gz";
-            $fullPath = $destPath . $filename;
+
+            // Ensure proper path separator between destination and filename
+            $fullPath = rtrim($destDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
             
             // Check disk space before creating backup
             $estimatedSize = $this->estimateSize($sourcePath);

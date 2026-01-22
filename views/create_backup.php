@@ -44,14 +44,14 @@
                                     
                                     <div class="mb-3">
                                         <label for="source_path" class="form-label">Source Path</label>
-                                        <input type="text" class="form-control" id="source_path" name="source_path" value="<?php echo dirname(dirname(__DIR__)); ?>/" required>
-                                        <div class="form-text">The path to backup (e.g., /home/user/data/)</div>
+                                        <input type="text" class="form-control" id="source_path" name="source_path" value="" placeholder="/path/to/backup/" required>
+                                        <div class="form-text">The path to backup (e.g., /var/www/html/AutomaticDataBackupSystem/)</div>
                                     </div>
                                     
                                     <div class="mb-3">
                                         <label for="destination_path" class="form-label">Destination Path</label>
                                         <input type="text" class="form-control" id="destination_path" name="destination_path" value="<?php echo rtrim(UPLOAD_PATH, '/'); ?>/" required>
-                                        <div class="form-text">Where to store the backup file</div>
+                                        <div class="form-text">Where to store the backup file (default: <?php echo UPLOAD_PATH; ?>)</div>
                                     </div>
                                     
                                     <div class="row">
